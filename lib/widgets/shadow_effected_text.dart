@@ -19,7 +19,9 @@ class ShadowEffectedText extends StatelessWidget {
         color: Colors.white,
         fontSize: size,
         fontWeight: fontweight,
-        shadows: [Shadow(blurRadius: 5, offset: Offset(0, 1))],
+        shadows: [
+          Shadow(color: Colors.black87, blurRadius: 5, offset: Offset(0, 1)),
+        ],
       ),
     );
   }

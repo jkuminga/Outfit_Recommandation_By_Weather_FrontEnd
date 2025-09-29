@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:outfit_fe/models/widget_styles.dart';
 import 'package:outfit_fe/widgets/closet_item_widget.dart';
 import 'package:outfit_fe/widgets/hourly_weather_info_widget.dart';
 import 'package:outfit_fe/widgets/outfit_combination.dart';
@@ -61,9 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Container(
           decoration: BoxDecoration(
             color: bgColors['clear'],
-            boxShadow: [
-              BoxShadow(color: Colors.grey.withOpacity(0.7), blurRadius: 10),
-            ],
+            boxShadow: WidgetStyles.boxShadow,
           ),
           width: boxWidth,
           height: boxHeight,
@@ -102,13 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Icons.place,
                             size: 22,
                             color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black54,
-                                blurRadius: 5,
-                                offset: Offset(0, 1),
-                              ),
-                            ],
+                            shadows: WidgetStyles.textShadow,
                           ),
                           ShadowEffectedText(text: '울산광역시', size: 19),
                         ],
@@ -160,13 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           fontSize: 45,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
-                                          shadows: [
-                                            Shadow(
-                                              offset: Offset(0.0, 1.0),
-                                              blurRadius: 8.0,
-                                              color: Colors.black54,
-                                            ),
-                                          ],
+                                          shadows: WidgetStyles.textShadow,
                                         ),
                                       ),
                                       Padding(
@@ -179,12 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 19,
-                                            shadows: [
-                                              Shadow(
-                                                blurRadius: 8,
-                                                offset: Offset(0, 1),
-                                              ),
-                                            ],
+                                            shadows: WidgetStyles.textShadow,
                                           ),
                                         ),
                                       ),
@@ -195,12 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 19,
-                                      shadows: [
-                                        Shadow(
-                                          blurRadius: 5,
-                                          offset: Offset(0, 1),
-                                        ),
-                                      ],
+                                      shadows: WidgetStyles.textShadow,
                                     ),
                                   ),
                                 ],

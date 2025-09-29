@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:outfit_fe/models/closet_item.dart';
+import 'package:outfit_fe/screens/add_new_cloth_screen.dart';
 
 class AddHistoryScreen extends StatefulWidget {
   const AddHistoryScreen({super.key});
@@ -12,15 +13,21 @@ class _AddHistoryState extends State<AddHistoryScreen> {
   final double fixedWidth = 450; // 값 수정
   final double fixedHeight = 844; // 값 수정
 
-  late String _currentState;
-  late String _selectedCategory;
+  late String _currentState; // 현재 화면에서 출력 중인 옷 분류 ex) 상의, 하의,...
+  late String
+  _selectedCategory; // 현재 화면에서 출력 중인 특정 옷 분류의 세부 카테고리 ex) 맨투맨, 후드티 등...
 
-  final List<String> states = ['TOP', 'BOTTOM', 'OUTER', 'ETC'];
-  final List<String> categories = ['맨투맨', '반팔'];
-  final TextEditingController controller = TextEditingController();
+  final List<String> states = ['TOP', 'BOTTOM', 'OUTER', 'ETC']; // 상태 문자열 목록
+  final List<String> categories = ['맨투맨', '반팔']; // 세부 카테고리 목록
+  final TextEditingController controller =
+      TextEditingController(); // 검색 위젯 컨트롤러
 
-  List<ClosetItem?> selectedItem = List.generate(4, (index) => null);
+  List<ClosetItem?> selectedItem = List.generate(
+    4,
+    (index) => null,
+  ); // 오늘 입을 옷을 각 분류마다 하나씩 입력 ex) [흰색 맨투맨, 반바지, 외투없음, 내복없음]
 
+  // 화면에 출력할 옷 분류를 변경하는 함수
   void changeState(String state) {
     setState(() {
       _currentState = state;
@@ -63,26 +70,36 @@ class _AddHistoryState extends State<AddHistoryScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.chevron_left),
-                      iconSize: 35,
-                    ),
-                    Text(
-                      '새로운 기록 추가',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 5,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.chevron_left),
+                        iconSize: 35,
+                        color: Colors.blue,
                       ),
-                    ),
-                    SizedBox(width: 50),
-                  ],
+                      Text(
+                        '새로운 기록 추가',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.done, color: Colors.blue.shade700),
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -115,6 +132,7 @@ class _AddHistoryState extends State<AddHistoryScreen> {
                     ],
                   ),
                 ),
+                SizedBox(height: 30),
                 Padding(
                   // 검색 위젯
                   padding: const EdgeInsets.symmetric(
@@ -131,21 +149,27 @@ class _AddHistoryState extends State<AddHistoryScreen> {
                     ),
                     width: double.infinity,
                     height: 50,
-                    child: Row(
-                      children: [
-                        SizedBox(width: 15),
-                        Flexible(
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hint: Text('Search Item'),
-                              border: InputBorder.none,
-                              focusedBorder: UnderlineInputBorder(),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Flexible(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hint: Text('Search Item'),
+                                border: InputBorder.none,
+                                focusedBorder: UnderlineInputBorder(),
+                              ),
+                              controller: controller,
                             ),
-                            controller: controller,
                           ),
-                        ),
-                        IconButton(onPressed: () {}, icon: Icon(Icons.search)),
-                      ],
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(Icons.search),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -185,7 +209,17 @@ class _AddHistoryState extends State<AddHistoryScreen> {
                           ),
                         ],
                       ),
-                      TextButton(onPressed: () {}, child: Text('옷 추가')),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddNewClothScreen(),
+                            ),
+                          );
+                        },
+                        child: Text('옷 추가'),
+                      ),
                     ],
                   ),
                 ),
@@ -255,6 +289,10 @@ class _AddHistoryState extends State<AddHistoryScreen> {
     );
   }
 }
+
+// 화면 상단에 옷의 대분류를 선택하는 위젯
+// 각 버튼을 누르면 각 분류에 해당하는 옷 목록을 보여준다
+// 옷 목록에서 아이템을 선택하면 + 아이콘이 없어지고, 아이템 이미지 + 이름으로 바뀐다.
 
 class ItemSeletectWidget extends StatelessWidget {
   final String title;
