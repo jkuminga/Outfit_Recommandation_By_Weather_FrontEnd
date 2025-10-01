@@ -35,6 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   carousel_slider: ^5.1.1
+  flutter_colorpicker: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -64,6 +65,7 @@ flutter:
     - assets/images/cloudy.png
     - assets/images/sunny.png
     - assets/images/snowy.png
+    - assets/images/close.png
     - assets/images/top_icons/t-shirt.png
     - assets/images/top_icons/hoodie.png
     - assets/images/top_icons/long_sleeve.png
@@ -72,6 +74,13 @@ flutter:
     - assets/images/top_icons/sweater.png
     - assets/images/bottom_icons/long.png
     - assets/images/bottom_icons/shorts.png
+    - assets/images/bottom_icons/skirt.png
+    - assets/images/outer_icons/cardigan.png
+    - assets/images/outer_icons/coat.png
+    - assets/images/outer_icons/hooded_zipup.png
+    - assets/images/outer_icons/jacket.png
+    - assets/images/outer_icons/padded_jacket.png
+    - assets/images/outer_icons/windbreaker.png
 
 
   #   - images/a_dot_ham.jpeg

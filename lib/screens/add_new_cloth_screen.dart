@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:outfit_fe/models/category.dart';
 import 'package:outfit_fe/models/widget_styles.dart';
 import 'package:outfit_fe/widgets/done_button.dart';
@@ -27,6 +28,50 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
 
   final List<String> thickness = ['얇음', '보통', '두꺼움']; // 두꼐감 항목
   late String selectedThickness; // 선택한 두께감
+
+  final List<Color> commonClothesColors = [
+    Color(0xFF000000), // 블랙
+    Color(0xFFFFFFFF), // 화이트
+    Color(0xFF808080), // 그레이
+    Color(0xFF000080), // 네이비
+    Color(0xFF2F4F4F), // 다크 차콜 (슬랙스, 코트류에서 자주 쓰임)
+    Color(0xFF8B4513), // 브라운 (가죽, 니트류에서 많이 입음)
+    Color(0xFF556B2F), // 올리브/카키 (아우터, 캐주얼 자주 등장)
+  ];
+  Color pickerColor = Color(0xff443a49);
+  Color? currentColor = Color(0xff443a49);
+
+  void changeColor(Color color) {
+    setState(() => pickerColor = color);
+  }
+
+  void showColorChangeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          actions: [],
+          content: Column(
+            children: [
+              ColorPicker(
+                pickerColor: pickerColor,
+                onColorChanged: (color) {
+                  changeColor(color);
+                },
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() => currentColor = pickerColor);
+                  Navigator.of(context).pop();
+                },
+                child: Text('done'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   //두꼐감 변경 함수
   void changeThickness(String thickness) {
@@ -282,12 +327,57 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
                           horizontal: 25,
                           vertical: 10,
                         ),
-                        child: Align(
-                          alignment: AlignmentGeometry.topLeft,
-                          child: Text(
-                            '색상 선택',
-                            style: TextStyle(fontSize: 18, color: Colors.blue),
-                          ),
+                        child: Row(
+                          children: [
+                            Text(
+                              '색상 선택',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.blue,
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: currentColor,
+                                border: Border.all(),
+                              ),
+                              width: 70,
+                              height: 25,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 50,
+                          vertical: 10,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            ...commonClothesColors.map(
+                              (e) => ColorButton(
+                                color: e,
+                                onChange: () {
+                                  setState(() => currentColor = e);
+                                },
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: showColorChangeDialog,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  border: Border.all(),
+                                  borderRadius: BorderRadius.circular(90),
+                                ),
+                                width: 30,
+                                height: 30,
+                                child: Icon(Icons.add),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       // 두께감 선택 영역
@@ -296,50 +386,26 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
                           horizontal: 25,
                           vertical: 10,
                         ),
-                        child: Align(
-                          alignment: AlignmentGeometry.topLeft,
-                          child: Text(
-                            '두께감 선택',
-                            style: TextStyle(fontSize: 18, color: Colors.blue),
-                          ),
+                        child: Row(
+                          children: [
+                            Text(
+                              '두께감 선택',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
+                          horizontal: 40,
                           vertical: 5,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            // GestureDetector(
-                            //   onTap: () => changeThickness(thickness[0]),
-                            //   child: Container(
-                            //     decoration: BoxDecoration(
-                            //       color: (selectedThickness == thickness[0])
-                            //           ? Colors.blue
-                            //           : Colors.white,
-                            //       borderRadius: BorderRadius.circular(90),
-                            //       border: Border.all(
-                            //         color: Colors.blue,
-                            //         width: 2,
-                            //       ),
-                            //     ),
-                            //     width: 90,
-                            //     height: 90,
-                            //     child: Center(
-                            //       child: Text(
-                            //         thickness[0],
-                            //         style: TextStyle(
-                            //           color: (selectedThickness == thickness[0])
-                            //               ? Colors.white
-                            //               : Colors.blue.shade500,
-                            //           fontSize: 18,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
                             ThicknessButton(
                               thickness: thickness[0],
                               onTapAction: () => changeThickness(thickness[0]),
@@ -362,6 +428,28 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
                   ),
                 ),
         ),
+      ),
+    );
+  }
+}
+
+class ColorButton extends StatelessWidget {
+  final Color color;
+  final VoidCallback onChange;
+  const ColorButton({super.key, required this.color, required this.onChange});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onChange,
+      child: Container(
+        decoration: BoxDecoration(
+          color: color,
+          border: Border.all(),
+          borderRadius: BorderRadius.circular(90),
+        ),
+        width: 30,
+        height: 30,
       ),
     );
   }
