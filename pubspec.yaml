@@ -64,6 +64,16 @@ flutter:
     - assets/images/cloudy.png
     - assets/images/sunny.png
     - assets/images/snowy.png
+    - assets/images/top_icons/t-shirt.png
+    - assets/images/top_icons/hoodie.png
+    - assets/images/top_icons/long_sleeve.png
+    - assets/images/top_icons/s_shirt.png
+    - assets/images/top_icons/shirt.png
+    - assets/images/top_icons/sweater.png
+    - assets/images/bottom_icons/long.png
+    - assets/images/bottom_icons/shorts.png
+
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

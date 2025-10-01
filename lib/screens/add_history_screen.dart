@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:outfit_fe/models/closet_item.dart';
 import 'package:outfit_fe/screens/add_new_cloth_screen.dart';
+import 'package:outfit_fe/widgets/done_button.dart';
 
 class AddHistoryScreen extends StatefulWidget {
   const AddHistoryScreen({super.key});
@@ -33,6 +34,8 @@ class _AddHistoryState extends State<AddHistoryScreen> {
       _currentState = state;
     });
   }
+
+  // 화면에 출력할 카테고리 설정 함수
 
   @override
   void initState() {
@@ -84,20 +87,19 @@ class _AddHistoryState extends State<AddHistoryScreen> {
                         },
                         icon: Icon(Icons.chevron_left),
                         iconSize: 35,
-                        color: Colors.blue,
                       ),
                       Text(
                         '새로운 기록 추가',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: Colors.blue,
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.done, color: Colors.blue.shade700),
-                      ),
+                      DoneButton(doneFunction: () {}),
+                      // IconButton(
+                      //   onPressed: () {},
+                      //   icon: Icon(Icons.done, color: Colors.blue.shade700),
+                      // ),
                     ],
                   ),
                 ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:outfit_fe/models/category.dart';
 import 'package:outfit_fe/models/widget_styles.dart';
+import 'package:outfit_fe/widgets/done_button.dart';
 
 class AddNewClothScreen extends StatefulWidget {
   const AddNewClothScreen({super.key});
@@ -14,19 +16,49 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
 
   bool isCategorySelected = false;
   final List<String> clothesCategories = ['Top', 'Bottom', 'Outer'];
-  late String selectedClothCategory;
+  late String selectedClothCategory; // 선택된 옷 분류
+
+  late List<List<String>> currentCategoryList; // 선택된 옷 분류 세부 카테고리 목록
+  late List<String>
+  selectedDetailCategory; // 현재 선택된 옷의 세부카테고리 (default 는 첫번째 값))
+
+  final TextEditingController nameController =
+      TextEditingController(); // 이름 컨트롤러
+
+  final List<String> thickness = ['얇음', '보통', '두꺼움']; // 두꼐감 항목
+  late String selectedThickness; // 선택한 두께감
+
+  //두꼐감 변경 함수
+  void changeThickness(String thickness) {
+    setState(() {
+      selectedThickness = thickness;
+    });
+  }
 
   // 카테고리 선택 함수
   void selectClothCategory(String category) {
     setState(() {
       selectedClothCategory = category;
       isCategorySelected = true;
+
+      // 선택된 분류에 따라서 그 세부 카테고리 목록을 currentCategoryList에 할당해준다.
+      if (selectedClothCategory == "Top") {
+        currentCategoryList = Category.topCategories;
+      } else if (selectedClothCategory == 'Bottom') {
+        currentCategoryList = Category.bottomCategories;
+      } else {
+        currentCategoryList = Category.outerCategories;
+      }
+      // print(currentCategoryList);
+      // 선택될 세부 카테고리 값의 초기값을 첫번째 값으로 선택한다.
+      selectedDetailCategory = currentCategoryList[0];
+      // print(selectedDetailCategory);
     });
   }
 
   @override
   void initState() {
-    // TODO: implement initState
+    selectedThickness = thickness[1];
     super.initState();
   }
 
@@ -51,6 +83,7 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
           width: boxWidth,
           height: boxHeight,
           child: (!isCategorySelected)
+              // 옷 대분류 카테고리 선택화면
               ? Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -60,7 +93,6 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
                         child: IconButton(
                           icon: Icon(Icons.chevron_left),
                           iconSize: 40,
-                          color: Colors.blue,
                           onPressed: () {
                             Navigator.pop(context);
                           },
@@ -95,7 +127,9 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
                               selectClothCategory(clothesCategories[0]);
                             },
                             text: '상의',
-                            image: Image.asset('assets/images/rainy.png'),
+                            image: Image.asset(
+                              'assets/images/top_icons/t-shirt.png',
+                            ),
                           ),
                         ],
                       ),
@@ -108,7 +142,9 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
                               selectClothCategory(clothesCategories[1]);
                             },
                             text: '하의',
-                            image: Image.asset('assets/images/rainy.png'),
+                            image: Image.asset(
+                              'assets/images/bottom_icons/long.png',
+                            ),
                           ),
                           SizedBox(width: 10),
                           CategoryButton(
@@ -124,9 +160,11 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
                     ],
                   ),
                 )
+              // 옷 대분류 선택이 끝난 후 세부 카테고리를 정해서 옷을 등록하는 화면
               : Center(
                   child: Column(
                     children: [
+                      // appBar
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Row(
@@ -138,27 +176,184 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
                                   isCategorySelected = false;
                                 });
                               },
-                              icon: Icon(
-                                Icons.chevron_left,
-                                size: 35,
-                                color: Colors.blue,
-                              ),
+                              icon: Icon(Icons.chevron_left, size: 35),
                             ),
                             Text(
                               '옷 추가 :  $selectedClothCategory',
                               style: TextStyle(
-                                color: Colors.blue,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
                               ),
                             ),
-                            IconButton(
-                              onPressed: () {},
-                              icon: Icon(
-                                Icons.done,
-                                color: Colors.blue,
-                                size: 35,
+                            DoneButton(doneFunction: () {}),
+                          ],
+                        ),
+                      ),
+                      // 세부 카테고리 목록 + 선택 버튼 리스트뷰
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: SizedBox(
+                          height: 40,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: currentCategoryList.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4,
+                                  horizontal: 4,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedDetailCategory =
+                                          currentCategoryList[index];
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color:
+                                          (selectedDetailCategory[0] ==
+                                              currentCategoryList[index][0])
+                                          ? Colors.blue
+                                          : Colors.white,
+                                      boxShadow: WidgetStyles.boxShadow,
+                                      borderRadius: BorderRadius.circular(360),
+                                    ),
+                                    width: 100,
+                                    height: 40,
+                                    child: Center(
+                                      child: Text(
+                                        currentCategoryList[index][0],
+                                        style: TextStyle(
+                                          color:
+                                              (selectedDetailCategory[0] ==
+                                                  currentCategoryList[index][0])
+                                              ? Colors.white
+                                              : Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      // 선택한 세부 카테고리에 등록된 아이콘 이미지 출력
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 30),
+                        child: Image.asset(
+                          selectedDetailCategory[1],
+                          height: 200,
+                        ),
+                      ),
+                      // 원하는 경우 이미지 추가
+                      // TODO : 이미지 추가 시 아이콘 이미지가 보여지는 영역에 선택한 이미지가 보이도록 해야함
+                      TextButton(onPressed: () {}, child: Text('이미지 추가')),
+                      // 이름 입력 텍스트 필드
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 20,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.blue, width: 1.5),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          height: 50,
+                          child: TextField(
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              hintText: "옷 이름",
+                              hintStyle: TextStyle(color: Colors.blue.shade400),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
                               ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // 옷 색상 선택
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 25,
+                          vertical: 10,
+                        ),
+                        child: Align(
+                          alignment: AlignmentGeometry.topLeft,
+                          child: Text(
+                            '색상 선택',
+                            style: TextStyle(fontSize: 18, color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                      // 두께감 선택 영역
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 25,
+                          vertical: 10,
+                        ),
+                        child: Align(
+                          alignment: AlignmentGeometry.topLeft,
+                          child: Text(
+                            '두께감 선택',
+                            style: TextStyle(fontSize: 18, color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 5,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // GestureDetector(
+                            //   onTap: () => changeThickness(thickness[0]),
+                            //   child: Container(
+                            //     decoration: BoxDecoration(
+                            //       color: (selectedThickness == thickness[0])
+                            //           ? Colors.blue
+                            //           : Colors.white,
+                            //       borderRadius: BorderRadius.circular(90),
+                            //       border: Border.all(
+                            //         color: Colors.blue,
+                            //         width: 2,
+                            //       ),
+                            //     ),
+                            //     width: 90,
+                            //     height: 90,
+                            //     child: Center(
+                            //       child: Text(
+                            //         thickness[0],
+                            //         style: TextStyle(
+                            //           color: (selectedThickness == thickness[0])
+                            //               ? Colors.white
+                            //               : Colors.blue.shade500,
+                            //           fontSize: 18,
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            ThicknessButton(
+                              thickness: thickness[0],
+                              onTapAction: () => changeThickness(thickness[0]),
+                              isSelected: (selectedThickness == thickness[0]),
+                            ),
+                            ThicknessButton(
+                              thickness: thickness[1],
+                              onTapAction: () => changeThickness(thickness[1]),
+                              isSelected: (selectedThickness == thickness[1]),
+                            ),
+                            ThicknessButton(
+                              thickness: thickness[2],
+                              onTapAction: () => changeThickness(thickness[2]),
+                              isSelected: (selectedThickness == thickness[2]),
                             ),
                           ],
                         ),
@@ -166,6 +361,44 @@ class _AddNewClothScreenState extends State<AddNewClothScreen> {
                     ],
                   ),
                 ),
+        ),
+      ),
+    );
+  }
+}
+
+class ThicknessButton extends StatelessWidget {
+  final VoidCallback onTapAction;
+  final String thickness;
+  final bool isSelected;
+
+  const ThicknessButton({
+    super.key,
+    required this.thickness,
+    required this.onTapAction,
+    required this.isSelected,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTapAction,
+      child: Container(
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.blue : Colors.white,
+          borderRadius: BorderRadius.circular(90),
+          border: Border.all(color: Colors.blue, width: 2),
+        ),
+        width: 90,
+        height: 90,
+        child: Center(
+          child: Text(
+            thickness,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Colors.blue.shade500,
+              fontSize: 18,
+            ),
+          ),
         ),
       ),
     );
@@ -203,9 +436,10 @@ class CategoryButton extends StatelessWidget {
             Text(
               text,
               style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: Colors.blue,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+                // color: Colors.white,
+                color: const Color.fromARGB(255, 0, 75, 137),
               ),
             ),
           ],
